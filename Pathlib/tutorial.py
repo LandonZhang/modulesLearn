@@ -17,6 +17,7 @@ print(Path.cwd())
 
 # * 遍历目录中的文件
 file_path = Path.cwd()
+# Path() 默认路径在此文件的上一级文件夹处
 for f in Path().iterdir():
     print(f)
 
@@ -121,7 +122,7 @@ print("重命名成功")
 
 # * 删除文件
 my_txt = Path() / "newName.txt"
-my_txt.touch()
+my_txt.touch()  # 创建文件
 my_txt.unlink()
 print("删除成功")
 
