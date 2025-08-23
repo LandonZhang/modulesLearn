@@ -230,7 +230,7 @@ def create_custom_filter_example():
         def filter(self, record):
             # 如果日志消息包含密码等敏感信息，就过滤掉
             sensitive_keywords = ["password", "密码", "token"]
-            message = record.getMessage().lower()
+            message = record.getMessage().lower()  # 获得 log 中的信息
 
             for keyword in sensitive_keywords:
                 if keyword in message:
@@ -262,7 +262,7 @@ def create_custom_filter_example():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
 
     # 可选：演示自定义过滤器
-    # create_custom_filter_example()
+    create_custom_filter_example()
