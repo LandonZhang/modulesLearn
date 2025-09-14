@@ -142,9 +142,9 @@ def main():
     print("=" * 50)
 
     demo_basic_usage()
-    demo_as_completed()
-    demo_error_handling()
-    demo_practical_example()
+    # demo_as_completed()
+    # demo_error_handling()
+    # demo_practical_example()
 
     print("\n" + "=" * 50)
     print("📝 关键要点:")

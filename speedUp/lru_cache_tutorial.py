@@ -208,10 +208,10 @@ def main():
     print("=" * 50)
 
     demo_basic_usage()
-    demo_cache_management()
-    demo_database_query()
-    demo_complex_parameters()
-    demo_cache_size_effects()
+    # demo_cache_management()
+    # demo_database_query()
+    # demo_complex_parameters()
+    # demo_cache_size_effects()
 
     print("\n" + "=" * 50)
     print("📝 关键要点:")
