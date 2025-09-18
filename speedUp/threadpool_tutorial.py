@@ -34,7 +34,9 @@ def demo_basic_usage():
     print("\n并行执行:")
     start = time.time()
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+        # submit 之后任务立刻在空闲线程开始执行
         futures = [executor.submit(slow_task, i) for i in range(4, 7)]
+        # .result() 获得结果的方式会按 future 顺序返回结果 (即使后面的任务已经完成也得等前面的任务完成再输出)
         results = [future.result() for future in futures]
     parallel_time = time.time() - start
     print(f"并行耗时: {parallel_time:.2f}秒")
@@ -57,7 +59,7 @@ def demo_as_completed():
         # 任务映射字典
         future_to_id = {executor.submit(random_task, i): i for i in range(1, 6)}
 
-        # 按完成顺序处理结果
+        # .as_completed() 按完成顺序返回结果 (完成一个就返回一个)
         for future in concurrent.futures.as_completed(future_to_id):
             task_id = future_to_id[future]
             result = future.result()
@@ -93,47 +95,26 @@ def demo_error_handling():
     print(f"\n结果: 成功{len(successful)}个, 失败{len(failed)}个")
 
 
-def demo_practical_example():
-    """实际应用示例"""
-    print("\n\n=== 4. 实际应用示例：批量数据处理 ===")
+# 提供了 map 函数供我们 submit 和 .result() 一起做 (按顺序返回结果)
+def slow_task(x):
+    time.sleep(3 - x)  # 模拟不同耗时
+    return x
 
-    def process_data(data_id: int) -> dict:
-        """模拟数据处理"""
-        # 模拟API调用或数据库查询
-        time.sleep(random.uniform(0.1, 0.3))
 
-        return {
-            "id": data_id,
-            "result": f"处理结果_{data_id}",
-            "status": "完成",
-            "thread": threading.current_thread().name,
-        }
+def map_demo():
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as ex:
+        # 将 1, 2, 3 分别传入 slow_task 中并执行 (按顺序返回结果, 就算 3 先完成也得等 1)
+        for result in ex.map(slow_task, [1, 2, 3]):
+            print("结果:", result)
 
-    # 要处理的数据
-    data_ids = list(range(1, 11))  # 10个数据项
 
-    print(f"处理 {len(data_ids)} 个数据项...")
-    start = time.time()
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-        # 提交所有任务
-        future_to_id = {
-            executor.submit(process_data, data_id): data_id for data_id in data_ids
-        }
-
-        # 收集结果
-        results = []
-        for future in concurrent.futures.as_completed(future_to_id):
-            data_id = future_to_id[future]
-            try:
-                result = future.result()
-                results.append(result)
-                print(f"  数据{data_id} 完成 - 线程: {result['thread']}")
-            except Exception as e:
-                print(f"  数据{data_id} 失败: {e}")
-
-    process_time = time.time() - start
-    print(f"\n处理完成: {len(results)}个成功, 总耗时{process_time:.2f}秒")
+def as_completed_demo():
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as ex:
+        # 创建三个 future 并执行
+        futures = [ex.submit(slow_task, x) for x in [1, 2, 3]]
+        # 谁先完成谁先返回
+        for result in concurrent.futures.as_completed(futures):
+            print("结果:", result.result())
 
 
 def main():
@@ -141,18 +122,16 @@ def main():
     print("🧵 线程池 (ThreadPoolExecutor) 教程")
     print("=" * 50)
 
-    demo_basic_usage()
+    # demo_basic_usage()
     # demo_as_completed()
     # demo_error_handling()
     # demo_practical_example()
+    print("=== map 演示 ===")
+    map_demo()
+    print("=== as_completed 演示 ===")
+    as_completed_demo()
 
     print("\n" + "=" * 50)
-    print("📝 关键要点:")
-    print("1. 适用于 I/O 密集型任务")
-    print("2. max_workers 控制并发数量")
-    print("3. as_completed() 按完成顺序处理")
-    print("4. 使用字典映射追踪任务")
-    print("5. 注意错误处理和异常管理")
 
 
 if __name__ == "__main__":
