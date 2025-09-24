@@ -1,2 +1,4 @@
 vim/
 __pycache__
+# 忽略体积过大的调查数据集
+pandas/data/survey_results_public.csv
