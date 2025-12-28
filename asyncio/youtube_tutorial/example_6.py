@@ -12,6 +12,7 @@ def fetch_data(param):
 
 async def main():
     # Run in Threads
+    # 多线程立刻开始工作, 不用等 main() await 放弃控制权
     task1 = asyncio.create_task(asyncio.to_thread(fetch_data, 1))
     task2 = asyncio.create_task(asyncio.to_thread(fetch_data, 2))
     result1 = await task1
@@ -19,13 +20,16 @@ async def main():
     result2 = await task2
     print("Thread 2 fully completed")
 
-    # Run in Process Pool
+    # Run in Process Pool (两种方式效果一致)
     loop = asyncio.get_running_loop()
 
     with ProcessPoolExecutor() as executor:
+        # 多进程立刻开始工作, 不用等 main() await 放弃控制权
         task1 = loop.run_in_executor(executor, fetch_data, 1)
         task2 = loop.run_in_executor(executor, fetch_data, 2)
 
+        # 这里 await 的作用仅仅是控制输出顺序,实际上 Event Loop 中没有其他任务供它调度了
+        # Event Loop 对子线程中的任务调度完全没有权限
         result1 = await task1
         print("Process 1 fully completed")
         result2 = await task2

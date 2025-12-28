@@ -2,3 +2,6 @@ vim/
 __pycache__
 # 忽略体积过大的调查数据集
 pandas/data/survey_results_public.csv
+
+# 忽略包含私密信息的文件
+os/

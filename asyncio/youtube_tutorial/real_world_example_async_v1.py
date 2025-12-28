@@ -21,8 +21,8 @@ IMAGE_URLS = [
 ]
 
 
-ORIGINAL_DIR = Path("original_images")
-PROCESSED_DIR = Path("processed_images")
+ORIGINAL_DIR = Path(r"asyncio\youtube_tutorial").absolute() / "original_images"
+PROCESSED_DIR = Path(r"asyncio\youtube_tutorial").absolute() / "processed_images"
 
 
 def download_single_image(url: str, img_num: int) -> Path:

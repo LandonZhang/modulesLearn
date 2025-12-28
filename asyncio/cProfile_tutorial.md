@@ -10,6 +10,22 @@ python -m cProfile -o profile_output.prof real_world_example_async_v1.py
 snakeviz profile_output.prof
 ```
 
+文件字段解析
+
+| 列名                      | 含义                         |
+| ------------------------- | ---------------------------- |
+| ncalls                    | 调用次数                     |
+| tottime                   | 函数自身耗时，不含子函数调用 |
+| percall(1)                | tottime / ncalls             |
+| cumtime                   | 函数总耗时，含子调用         |
+| percall(2)                | cumtime / ncalls             |
+| filename:lineno(function) | 位置与函数名                 |
+
+典型分析：
+
+- 如果一个函数的 tottime 高 → 它自己内部计算慢。
+- 如果 tottime 低但 cumtime 高 → 它花时间花在它调用的其他函数身上。
+
 在 python 代码中内嵌使用
 
 ```python

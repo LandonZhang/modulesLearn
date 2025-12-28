@@ -1,6 +1,7 @@
 # Python argparse 模块完全教程
 
 ## 目录
+
 - [简介](#简介)
 - [基础用法](#基础用法)
 - [参数类型](#参数类型)
@@ -29,6 +30,7 @@ parser.description = "用于学习 python cli 的工具"
 ### 添加参数
 
 #### 位置参数（必填参数）
+
 ```python
 # 添加单个必填参数
 parser.add_argument("param", type=int, help="请输入一个整数")
@@ -38,6 +40,7 @@ parser.add_argument("param", type=int, help="请输入两个整数，第一个�
 ```
 
 #### 可选参数
+
 ```python
 # 基本可选参数
 parser.add_argument("-v", "--verbose", help="输出更详细的执行内容", action="store_true")
@@ -51,7 +54,7 @@ parser.add_argument("-v", "--verbose", help="输出更详细的执行内容", ac
 ### nargs 参数个数控制
 
 - `nargs=1`：捕获 1 个参数，返回列表
-- `nargs=2`：捕获 2 个参数，返回列表  
+- `nargs=2`：捕获 2 个参数，返回列表
 - `nargs='*'`：捕获 0 个或多个参数
 - `nargs='+'`：捕获 1 个或多个参数
 - `nargs='?'`：捕获 0 个或 1 个参数
@@ -146,10 +149,11 @@ parser.add_argument("--collect", action=AccumulateAction, help="收集多个值"
 ### 高级自定义Action
 
 #### JSON解析Action
+
 ```python
 class JsonAction(Action):
     """将输入的 JSON 字符串解析为 Python 对象"""
-    
+  
     def __call__(self, parser, namespace, values, option_string=None):
         try:
             parsed_json = json.loads(values)
@@ -159,15 +163,16 @@ class JsonAction(Action):
 ```
 
 #### 范围验证Action
+
 ```python
 class RangeAction(Action):
     """验证数字是否在指定范围内"""
-    
+  
     def __init__(self, option_strings, dest, min_val=None, max_val=None, **kwargs):
         self.min_val = min_val
         self.max_val = max_val
         super().__init__(option_strings, dest, **kwargs)
-    
+  
     def __call__(self, parser, namespace, values, option_string=None):
         try:
             num = int(values)
@@ -239,7 +244,7 @@ print(type(args.param))  # <class 'list'>
 项目中包含以下示例文件：
 
 - `tutorial.py` - 基础教程和互斥参数组示例
-- `custom_action_example.py` - 自定义Action类示例  
+- `custom_action_example.py` - 自定义Action类示例
 - `advanced_action_example.py` - 高级自定义Action（JSON解析、范围验证）
 - `function_action_example.py` - 自定义类型处理函数示例
 

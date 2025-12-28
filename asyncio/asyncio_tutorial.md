@@ -45,6 +45,13 @@
   - `result`: 得到结果
   - `stop`: 暂停
 
+**Event Loop** 什么时候才能调度一个 Coroutine Object?
+
+1. 主动调用 `asyncio.run()`
+2. 主动等待 `await`
+3. 将 Corountine Object 加入任务队列 `create_task()`，Event Loop 在其他任务因为 IO 任务暂停时不会**闲着**，而是看还有没有任务可以进行执行（此为并行调度的关键！）
+4. 使用 `asyncio.gather` 或者 `asyncio.TaskGroup` 集中创建 tasks
+
 ## 协程函数与协程对象
 
 让我们从最基本的例子开始理解协程：
@@ -170,8 +177,9 @@ async def main():
 
 **关键理解点：**
 
-- `asyncio.create_task()` 将协程调度进入 event loop，但不会立即启动执行
+- `asyncio.create_task()` 将协程调度提前加入 event loop 进行调度，但不会立即启动执行
 - 任务在事件循环中并发执行，可以实现真正的异步
+- 总耗时2s，结合动画理解即可
 
 ## 任务执行顺序
 
@@ -223,7 +231,7 @@ async def fetch_data(param):
 
 使用多线程处理 I/O 任务通常有两个主要原因：
 
-1. **现有代码结构复杂**：使用 `async/await` 重构开销过大，希望快速通过并发执行来提升性能
+1. **现有代码结构复杂**：使用 `async/await` 重构开销过大，希望快速通过并发执行来提升性能98
 2. **库不支持异步**：当前使用的第三方库没有异步版本支持，不得不借助多线程实现并发操作
 
 ```python
@@ -291,13 +299,20 @@ async def main():
 pip install scalene
 
 # 运行性能分析
-scalene your_script.py
+scalene script.py --outfile result.scl
+scalene --viewer result.scl
 ```
 
 **scalene 的关键指标：**
 
 - **系统时间**：等待 I/O 服务的时间（文件读写、网络请求等）
 - **Python 时间**：Python 代码实际执行时间
+
+**scalene 中定义的三类时间：**
+
+* **Python** ：纯 Python 解释器干活的时间（纯 Python for 循环、列表推导、自己写的逻辑） → 想 CPU 并行就考虑 **多进程 / 改算法 / 调库**
+* **native** ：C/C++ 扩展干活的时间（`numpy` 运算） → 多线程可能收益很大
+* **system** ：在系统里睡觉/等 I/O 的时间（文件读写、数据库访问、`request`） → 典型  **I/O 绑定** ，适合多线程 / 异步
 
 **基于分析结果选择优化策略：**
 
@@ -372,6 +387,8 @@ async def main():
 ```
 
 **使用场景：** 当希望全部任务必须成功，只要有一个错误就停止所有任务时，使用 TaskGroup
+
+**注意：** TaskGroup 创建的任务不需要手动 `await`，在创建之后就会自动 `await`
 
 ## 实际应用案例
 

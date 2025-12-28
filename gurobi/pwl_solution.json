@@ -1,0 +1,24 @@
+{
+  "SolutionInfo": {
+    "Status": 2,
+    "Runtime": 1.9998550415039063e-3,
+    "Work": 2.2452875e-5,
+    "ObjVal": 5,
+    "ObjBound": 5,
+    "ObjBoundC": 5,
+    "MIPGap": 0,
+    "IntVio": 0,
+    "BoundVio": 0,
+    "ConstrVio": 0,
+    "IterCount": 0,
+    "BarIterCount": 0,
+    "NodeCount": 0,
+    "SolCount": 1,
+    "PoolObjBound": 5,
+    "PoolObjVal": [5]
+  },
+  "Vars": [
+    { "VarName": "x", "X": 2 },
+    { "VarName": "y", "X": 5 }
+  ]
+}

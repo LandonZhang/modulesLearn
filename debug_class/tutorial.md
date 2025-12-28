@@ -36,6 +36,16 @@
 | `justMyCode`  | 是否仅断在用户源代码                                                                               | `true`/`false`（调库源码时可设为 false）         |
 | ...             | 更多进阶参数详见官方文档                                                                           |                                                      |
 
+以 **module** 形式运行文件能确保运行时的根目录是最外层目录，否则 python 将以脚本目录为根目录，比如以下结构：
+
+```txt
+root/
+-- folder/
+---- module.py
+```
+
+如果在 `root`目录下直接 run `module.py`，那么 python 将自动把根目录切换到 `folder`，导致一些 `import` 意外失效。但如果以 module 形式运行：`"module": "folder.module"`，那么将继续保持以 `root` 为项目根目录。
+
 ---
 
 ## 配置样例 1：调试当前打开的 Python 文件
