@@ -5,7 +5,8 @@ import logging
 logging.basicConfig(level=logging.INFO, format="%(name)s - %(levelname)s - %(message)s")
 
 # 创建一个子日志记录器
-logger_a = logging.getLogger("myapp.moduleA")
+# 没有 myapp 的父logger, logging 会隐式创建一个, 最终将信息传到 root logger 处
+logger_a = logging.getLogger("myapp.moduleA")  # 由名称告诉 logging 自己是子 logger
 logger_a.propagate = False  # 关闭向上传播，到 logger_a 停止
 # 创建一个文件处理器
 file_handler = logging.FileHandler("moduleA.log")

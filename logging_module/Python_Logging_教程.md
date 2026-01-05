@@ -26,8 +26,10 @@ Python 的 `logging` 模块就像是一个**专业的日志管家**，它能够�
 - Logger 是日志系统的入口点
 - 可以设置日志级别，决定记录哪些级别的信息
 - `getLogger()` 不传入参数默认创建一个 `root logger`
-  - 如果不显式创建它，它只处理 `WARNING` 及以上级别的日志，并且因为没有处理器，任何日志事件都无法被输出。
+  - 其为所有 logger 的默认父级 `logger`，使用 `logging` 模块时默认自动创建。
+  - 如果不显式创建它，它只处理 `WARNING` 及以上级别的日志，并且因为没有处理器，任何日志事件都无法被输出（只有在全局找不到任何 `Handler` 时默认输出到终端，避免日志信息丢失）。
   - `logging.basicConfig()` 的作用就是通过为其添加一个 `StreamHandler` 来“激活”它，使其能够将日志输出到控制台。
+  
 
 ### 2. Handler (处理器)
 
@@ -46,7 +48,7 @@ Python 的 `logging` 模块就像是一个**专业的日志管家**，它能够�
 - 可以包含时间戳、日志级别、模块名、消息内容等
 - 不同的 Handler 可以使用不同的 Formatter
 
-![1755922090519](image/Python_Logging_教程/1755922090519.png)
+<img src="image/Python_Logging_教程/1755922090519.png" alt="1755922090519" style="zoom:40%;" />
 
 ### 4. Filter (过滤器)
 
@@ -201,7 +203,7 @@ if logger.isEnabledFor(logging.DEBUG):
 
 Python 的 logging 模块提供了一个强大且灵活的日志记录系统：
 
-- **Logger** 是入口点，负责收集日志
+- **Logger** 是入口点，负责收集日志，用户只需要使用 logger 即可，不需要管背后的 Handler
 - **Handler** 决定日志的输出目标
 - **Formatter** 控制日志的显示格式
 - **Filter** 提供精细的过滤控制
